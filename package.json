@@ -4,7 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "functions": "node src/1-functions.ts",
+    "errors": "node src/2-errors.ts",
+    "interface": "node src/3-interface.ts",
+    "my": "node src/my.ts",
+    "tasks": "node src/tasks.ts",
+    "flights": "node src/flights.ts",
+    "flights-bugs": "node src/flights-bugs.ts",
+    "run": "node",
+    "check": "tsc --noEmit",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
