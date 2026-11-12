@@ -63,4 +63,4 @@ function getOverdueTasks(list: Task[], now: Date = new Date()): Task[] {
 export type { Task, TaskStatus };  // Типы экспортируем через export type — этого требуют isolatedModules и verbatimModuleSyntax в tsconfig
 export { tasks, getOverdueTasks }; // Значения (массив и функцию) экспортируем обычным export
 
-console.log(getOverdueTasks(tasks)); //выводит 
+console.log(getOverdueTasks(tasks)); // выводит просроченные задачи
