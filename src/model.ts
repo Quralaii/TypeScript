@@ -35,7 +35,7 @@ const tasks: Task[] = [
     assignee: "Айдана", // исполнитель
     status: "todo", // работа ещё не начата
     createdAt: "2026-11-08", // создана 8 ноября 2026
-    dueDate: "2026-11-25", // дедлайн 25 ноября 2026
+    dueDate: "2026-11-18", // дедлайн 18 ноября 2026
   },
 ]; 
 
@@ -57,10 +57,40 @@ function getOverdueTasks(list: Task[], now: Date = new Date()): Task[] {
       task.status !== "done" && // выполненные задачи просроченными не считаем
       task.dueDate.slice(0, 10) < today // сравниваем только дни; ISO-строки сравниваются корректно, а дедлайн «сегодня» не просрочен
   ); 
-} 
+}
 
 
-export type { Task, TaskStatus };  // Типы экспортируем через export type — этого требуют isolatedModules и verbatimModuleSyntax в tsconfig
-export { tasks, getOverdueTasks }; // Значения (массив и функцию) экспортируем обычным export
+// Краткая запись о задаче: только название, исполнитель, дедлайн и статус
+type DeadlineInfo = Pick<Task, "title" | "assignee" | "dueDate" | "status">;
+
+// Находит невыполненные задачи, до дедлайна которых осталось не больше daysLeft дней (по умолчанию 3)
+function getTasksNearDeadline(list: Task[], now: Date = new Date(), daysLeft: number = 3): DeadlineInfo[] {
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // начало сегодняшнего дня (без времени)
+  const msPerDay = 24 * 60 * 60 * 1000; // миллисекунд в сутках
+
+  return list
+    .filter((task) => {
+      const due = new Date(`${task.dueDate.slice(0, 10)}T00:00:00`); // начало дня дедлайна по местному времени
+      const diffDays = Math.round((due.getTime() - today.getTime()) / msPerDay); // сколько дней осталось до дедлайна
+      return (
+        task.status !== "done" && // выполненные задачи не показываем
+        diffDays >= 0 && // дедлайн ещё не прошёл (просроченные сюда не входят)
+        diffDays <= daysLeft // до дедлайна осталось не больше 3 дней
+      );
+    })
+    .map((task) => ({
+      title: task.title, // название задачи
+      assignee: task.assignee, // имя исполнителя
+      dueDate: task.dueDate, // дата дедлайна
+      status: task.status, // текущий статус
+    }));
+}
+
+
+export type { Task, TaskStatus, DeadlineInfo };  // Типы экспортируем через export type — этого требуют isolatedModules и verbatimModuleSyntax в tsconfig
+export { tasks, getOverdueTasks, getTasksNearDeadline }; // Значения (массив и функции) экспортируем обычным export
 
 console.log(getOverdueTasks(tasks)); // выводит просроченные задачи
+
+// Для примера берём «сегодня» = 15 ноября 2026: до дедлайна задачи №3 (18 ноября) остаётся ровно 3 дня
+console.log(getTasksNearDeadline(tasks, new Date("2026-11-15T12:00:00"))); // выводит задачи, у которых до дедлайна 3 дня или меньше
