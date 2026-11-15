@@ -23,6 +23,7 @@ function delayed(list: Flight[]): Flight[] {
 function totalDelay(list: Flight[]): number {
   let sum = 0;
   for (const f of list) {
+    if (f.status === "cancelled") continue; // отменённые рейсы не считаются задержкой
     sum = sum + f.delayMin;
   }
   return sum;
