@@ -92,5 +92,7 @@ export { tasks, getOverdueTasks, getTasksNearDeadline }; // Значения (м
 
 console.log(getOverdueTasks(tasks)); // выводит просроченные задачи
 
-// Для примера берём «сегодня» = 15 ноября 2026: до дедлайна задачи №3 (18 ноября) остаётся ровно 3 дня
 console.log(getTasksNearDeadline(tasks, new Date("2026-11-15T12:00:00"))); // выводит задачи, у которых до дедлайна 3 дня или меньше
+
+
+
