@@ -11,6 +11,7 @@
     "tasks": "node src/tasks.ts",
     "flights": "node src/flights.ts",
     "flights-bugs": "node src/flights-bugs.ts",
+    "bot": "node --env-file=.env src/bot.ts",
     "run": "node",
     "check": "tsc --noEmit",
     "build": "tsc"
